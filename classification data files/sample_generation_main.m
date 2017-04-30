@@ -1,0 +1,88 @@
+warning off;
+
+sprintf('Select folder containing .x.wav to process ');
+[filename, pathname]= uigetfile('*.x.wav');
+cwd=pwd;
+cd(pathname)
+file_dir=pwd;
+addpath(pwd);
+files=dir('*.x.wav');
+cd(cwd);
+
+for i = 1:length(files)
+    if strcmp(files(i).name,filename)
+        file_index = i;
+        break;
+    end
+end
+
+calls=[];
+t_pad=parm.pad*parm.sample_freq;
+t_actual=parm.nrec-2*t_pad;
+data = [];
+labels = [];
+timeinfo = [];
+
+for q=file_index
+    %fprintf("for loop: %d\n", q)
+    if(length(files(q).name) > 4 )
+        %fprintf("length of files(q).name is > 4\n")
+        if( strcmp(files(q).name(end-5:end),'.x.wav'))
+            %fprintf("valid file\n")
+            %siz=audioread(files(q).name);
+            info = audioinfo(files(q).name);
+            siz = [info.TotalSamples, info.NumChannels];
+            
+            %fprintf("finished with audioread\n")
+            %fprintf("siz(1) = %d\n", siz(1))
+            scale_factor=1;
+            
+            temp_name=files(q).name;
+            PARAMS=getxwavheaders(file_dir,temp_name);
+            julian_start_date=PARAMS.ltsahd.dnumStart(1);
+            %fprintf("finished with getxwavheaders\n")
+            time = julian_start_date + datenum(2000,0,0,0,0,0);
+            %fprintf("t_actual: %d\n", t_actual)
+            for(j=1:siz/t_actual/scale_factor)
+                
+                %fprintf("j: %d, num_iterations: %d\n", j, siz/t_actual);
+                
+                fprintf("j: %d\n", j);
+                off=(j-1)*t_actual+t_pad;
+                
+                %datestr(julian_start_date+datenum(2000,0,0,0,0,(off+1-t_pad)/parm.sample_freq))
+                datestr=0;
+                if(off+1+t_pad+t_actual > siz)
+                    endlimit = siz;
+                else
+                    endlimit = off+1+t_pad+t_actual;
+                end
+                
+                sub_data=audioread(files(q).name,[off+1-t_pad,endlimit]);
+                
+                fprintf("calling spectogram\n");
+                time_new = time + datenum(0,0,0,0,0,(j-1)*((parm.nrec/parm.sample_freq) - 2*parm.pad));
+                [GPL_struct,subdata,sublabels,subtimeinfo]=spectogram(sub_data,parm,time_new);
+                
+                
+                calls=[calls,GPL_struct];
+                data = [data;subdata];
+                labels = [labels;sublabels];
+                timeinfo = [timeinfo;subtimeinfo];
+                fprintf("saving image_data2.mat")
+                save('image_data2.mat','data','labels','timeinfo');
+                %j
+              
+            end
+            
+        end
+        
+    end
+    
+end
+
+
+
+
+
+
