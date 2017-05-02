@@ -1,0 +1,19 @@
+siteTitle = "CSE 145"
+baseColor = "#19647E"
+theme = "hyde-x"
+linkPrefix = "/teamUndergradScrubs"
+backPages = [
+  "/background/",
+  "/background/who-we-are/",
+  "/background/the-project/",
+  "/background/goals/",
+  "/background/about-scripps/",
+]
+procPages = [
+	"/process/",
+	"/process/week-1/",
+	"/process/week-2/",
+	"/process/week-3/",
+	"/process/week-4/",
+	"/process/week-5/",
+]
