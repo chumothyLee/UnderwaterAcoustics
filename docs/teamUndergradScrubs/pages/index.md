@@ -14,3 +14,5 @@ Using the seven years worth of acoustic data, our team will continue development
 
 This project is implemented under the guidance of [Dr. Ana Sirovic](http://scrippsscholars.ucsd.edu/asirovic), a researcher at the [Marine Acoustics Lab](https://scripps.ucsd.edu/labs/sirovic/) of the Scripps Institute of Oceanography.
 
+<center><img src="./Scripps.jpg" alt="Scripps Logo" style="width: 55%;"/></center>
+
