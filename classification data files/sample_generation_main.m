@@ -23,6 +23,10 @@ data = [];
 labels = [];
 timeinfo = [];
 
+
+filenum = 0;
+
+
 for q=file_index
     %fprintf("for loop: %d\n", q)
     if(length(files(q).name) > 4 )
@@ -64,13 +68,58 @@ for q=file_index
                 time_new = time + datenum(0,0,0,0,0,(j-1)*((parm.nrec/parm.sample_freq) - 2*parm.pad));
                 [GPL_struct,subdata,sublabels,subtimeinfo]=spectogram(sub_data,parm,time_new);
                 
-                
+                %start new code
+                for i=1:length(sublabels)
+
+                    %fprintf("sublabels(%d) = %s",i, string(sublabels(i)))
+           
+                    switch string(sublabels(i))
+                        case "blank"
+                            currLabel = 1
+                        case "noise"
+                            currLabel = 2
+                        case "croak"
+                            currLabel = 3
+                        case "jet-ski"
+                            currLabel = 4
+                        case "click train"
+                            currLabel = 5
+                        case "pulse train"
+                            currLabel = 6
+                        case "buzz"
+                            currLabel = 7
+                        case "downsweep"
+                            currLabel = 8
+                        case "beat"
+                            currLabel = 9
+                        otherwise
+                            fprintf("error: unexpected label")
+                            continue
+                            
+                    end
+                    
+                    
+                    fprintf("currLabel: %d\n", currLabel)
+                    fprintf("fileNum: %d\n", filenum)
+                    filename = "image_data" + currLabel + "_" + filenum + ".mat";
+                    fprintf("saving %s\n", filename)
+                    
+                    currData = subdata(i,1:end);
+                    currLabel = sublabels(i);
+                    currTimeInfo = subtimeinfo;
+                    save(filename,'currData','currLabel','currTimeInfo');
+                    
+                    filenum = filenum + 1;
+                    
+                end
+      
+                %end new code
                 calls=[calls,GPL_struct];
-                data = [data;subdata];
-                labels = [labels;sublabels];
-                timeinfo = [timeinfo;subtimeinfo];
-                fprintf("saving image_data2.mat")
-                save('image_data2.mat','data','labels','timeinfo');
+                %data = [data;subdata];
+                %labels = [labels;sublabels];
+                %timeinfo = [timeinfo;subtimeinfo];
+                %fprintf("saving image_data2.mat")
+                %save('image_data2.mat','data','labels','timeinfo');
                 %j
               
             end
