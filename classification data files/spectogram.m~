@@ -33,7 +33,6 @@ fr=linspace(parm.freq_lo,parm.freq_hi,parm.bin_hi-parm.bin_lo+1);
 imagesc(ns,fr,20*log10(abs(sp)),[-40,0]);
 axis xy; title('Spectrogram'); 
 
-%% legend for training options
 subplot (4,5,6);
 imshow('blank.jpg');
 title('blank - option 1');
@@ -41,8 +40,8 @@ subplot (4,5,7);
 imshow('noise.jpg');
 title('noise - option 2');
 subplot (4,5,8);
-imshow('croak.jpg');
-title('croak - option 3');
+imshow('croak.jpg - option 3');
+title('croak');
 subplot (4,5,9);
 imshow('jetski.jpg');
 title('jetski - option 4');
@@ -53,14 +52,16 @@ subplot (4,5,11);
 imshow('pulsetrain.jpg');
 title('pulsetrain - option 6');
 subplot (4,5,12);
-imshow('buzz.jpg');
-title('buzz - option 7');
+imshow('buzz.jpg - option 7');
+title('buzz');
 subplot (4,5,13);
 imshow('downsweep.jpg');
-title('downsweep - option 8')
+title('downsweep')
 subplot (4,5,14);
 imshow('beat.jpg');
-title('beat - option 9');
+title('beat');
+
+
 
 subdata = [];
 sublabels = [];
