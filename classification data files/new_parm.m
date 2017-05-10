@@ -46,3 +46,4 @@ parm.cm_max_on = 1
 parm.cm_max2_on = 1
 parm.waveform = 0
 
+run('sample_generation_main.m');

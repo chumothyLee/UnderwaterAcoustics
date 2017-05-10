@@ -80,6 +80,7 @@ if(strcmp(str0,'y') || strcmp(str0,'Y'))
         imwrite(A1,'im1.jpg');
         subplot(4,5,[16,20]);
         imshow(A1(:,:,[1 1 1]));
+        title ('label:');
         str = input(prompt1,'s');
         if (strcmp(str,'y') || strcmp(str,'Y'))
             prompt2 = 'label: ';                   %% give enumerates call type number here to label
