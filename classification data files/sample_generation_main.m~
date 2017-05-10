@@ -33,14 +33,13 @@ timeinfo = [];
 
 filenum = 0;
 
-% dialogue to prompt user to select a directory to put training data
+% dialogue to prompt user to select a directory to put training dta
 choice = questdlg('Select a directory to store training data', 'Select Directory', 'OK', 'Cancel','OK');
 
 if strcmp(choice, 'Cancel')
    return
 end
 
-% directory name to store training data
 dirToStore = uigetdir;
 
 
@@ -118,13 +117,13 @@ for q=file_index
                     
                     fprintf("currLabel: %d\n", currLabel)
                     fprintf("fileNum: %d\n", filenum)
-                    filename = fullfile(dirToStore, char("image_data" + currLabel + "_" + filenum + ".mat"));
+                    filename = "image_data" + currLabel + "_" + filenum + ".mat";
                     fprintf("saving %s\n", filename)
                     
                     currData = subdata(i,1:end);
                     currLabel = sublabels(i);
                     currTimeInfo = subtimeinfo;
-                    save(filename,'currData','currLabel','currTimeInfo');
+                    save(fullfile(dirToStore, filename),'currData','currLabel','currTimeInfo');
                     
                     filenum = filenum + 1;
                     
