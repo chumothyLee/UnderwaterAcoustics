@@ -21,8 +21,9 @@ norm_v=whiten_matrix(norm_v')';norm_h=whiten_matrix(norm_h);
 
 bas=abs(norm_v).^parm.xp1.*abs(norm_h).^parm.xp2;
 
-%sets figure parameters
-figure('Position', [300 300 900 700])
+hFig = figure('units','normalized','position',[.1 .1 .4 .4])
+%hFig = figure(1);
+set(hFig, 'Position', [3 3 10 15])
 
 GPL_struct=[];
 list = ['blank      ';'noise      ';'croak      ';'jet-ski    ';'click train';'pulse train';'buzz       ';'downsweep  ';'beat       '];  %call types
