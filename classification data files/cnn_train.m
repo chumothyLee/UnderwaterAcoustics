@@ -19,6 +19,7 @@ function [net, info] = cnn_train(net, imdb, getBatch, varargin)
 % This file is part of the VLFeat library and is made available under
 % the terms of the BSD license (see the COPYING file).
 
+
 opts.expDir = fullfile('data','exp') ;
 opts.continue = true ;
 opts.batchSize = 256 ;
@@ -59,12 +60,15 @@ net.layers{end-1}.precious = 1; % do not remove predictions, used for error
 vl_simplenn_display(net, 'batchSize', opts.batchSize) ;
 
 evaluateMode = isempty(opts.train) ;
-
+%fprintf("evaluateMode: %o\n", evaluateMode);
+%fprintf("before if ~evaluteMode");
 if ~evaluateMode
+  %fprintf("after if ~evaluateMode\n");
   for i=1:numel(net.layers)
     if isfield(net.layers{i}, 'weights')
       J = numel(net.layers{i}.weights) ;
       for j=1:J
+        %fprintf("setting net.layers{%d}.momentum{%d}\n", i, j);
         net.layers{i}.momentum{j} = zeros(size(net.layers{i}.weights{j}), 'single') ;
       end
       if ~isfield(net.layers{i}, 'learningRate')
@@ -76,6 +80,7 @@ if ~evaluateMode
     end
   end
 end
+
 
 % setup GPUs
 numGpus = numel(opts.gpus) ;
@@ -129,6 +134,8 @@ for epoch=start+1:opts.numEpochs
   val = opts.val ;
 
   if numGpus <= 1
+    %fprintf("numGpus <= 1\n");
+    %test = net.layers{16}.momentum{1}
     [net,stats.train,prof] = process_epoch(opts, getBatch, epoch, train, learningRate, imdb, net) ;
     [~,stats.val] = process_epoch(opts, getBatch, epoch, val, 0, imdb, net) ;
     if opts.profile
@@ -211,27 +218,34 @@ if numel(labels) == size(predictions, 4)
 end
 
 %%% ------------ use for analysis 
-% if strcmp(evalMode,'test')
-%    
-%     if isempty(cnt)
-%         cnt = 0;
-%     end
-%     l = size(predictions,4);
-%     cnt = cnt + l;
-%     actual=[];
-%     predicted=[];
-% 
-%     for i =1:l
-%         actual(i) = labels(:,:,1,i);
-%         predicted(i) = predictions(:,:,1,i);
-%     end
-%     
-%     filename = 'output.xlsx';
-%     sheet = 1;
-%     range = cnt - l + 1;
-%     xlRange = strcat('A',int2str(range));
-%     xlswrite(filename,[actual',predicted'],sheet,xlRange)
-% end
+ if strcmp(evalMode,'test')
+    
+     if isempty(cnt)
+         cnt = 0;
+     end
+     l = size(predictions,4);
+     cnt = cnt + l;
+     actual=[];
+     predicted=[];
+ 
+     for i =1:l
+         actual(i) = labels(:,:,1,i);
+         predicted(i) = predictions(:,:,1,i);
+     end
+     
+     %filename = 'output.xlsx';
+     %sheet = 1;
+     range = cnt - l + 1;
+    
+     %xlRange = strcat('A',int2str(range));
+     if range == 1
+         fprintf("writing first time\n");
+         %xlswrite(filename,[actual',predicted'],sheet,xlRange);
+         dlmwrite('output.csv', [actual', predicted'], 'delimiter', ',')
+     else
+         dlmwrite('output.csv', [actual', predicted'], 'delimiter', ',', '-append')
+     end
+ end
 
 
 %skip null labels
@@ -247,6 +261,7 @@ m = min(5, size(predictions,3)) ;
 error = ~bsxfun(@eq, predictions, labels) ;
 err(1,1) = sum(sum(sum(mass .* error(:,:,1,:)))) ;
 err(2,1) = sum(sum(sum(mass .* min(error(:,:,1:m,:),[],3)))) ;
+ 
 
 % -------------------------------------------------------------------------
 function err = error_binary(opts, labels, res)
@@ -267,10 +282,14 @@ function  [net_cpu,stats,prof] = process_epoch(opts, getBatch, epoch, subset, le
 % move the CNN to GPU (if needed)
 numGpus = numel(opts.gpus) ;
 if numGpus >= 1
+  fprintf("numGpus >= 1");
   net = vl_simplenn_move(net_cpu, 'gpu') ;
   one = gpuArray(single(1)) ;
 else
+  fprintf("numGpus < 1\n");
+  %tesbeforenetcput = net_cpu.layers{16}.momentum{1}
   net = net_cpu ;
+  %testafternetcpu = net_cpu.layers{16}.momentum{1}
   net_cpu = [] ;
   one = single(1) ;
 end
@@ -278,9 +297,11 @@ end
 % assume validation mode if the learning rate is zero
 training = learningRate > 0 ;
 if training
+  fprintf("it be training mode\n");
   mode = 'train' ;
   evalMode = 'normal' ;
 else
+  fprintf("it be test mode\n");
   mode = 'val' ;
   evalMode = 'test' ;
 end
@@ -446,6 +467,11 @@ for l=numel(net.layers):-1:1
       % standard gradient training
       thisDecay = opts.weightDecay * net.layers{l}.weightDecay(j) ;
       thisLR = lr * net.layers{l}.learningRate(j) ;
+      %fprintf(opts.momentum);
+      %fprintf(net.layers{l}.momentum{j});
+      %test = opts.momentum
+      %fprintf("didn't find net.layers{%d}.momentum{%d}\n", l, j);
+      %test2 = net.layers{l}.momentum{j}
       net.layers{l}.momentum{j} = ...
         opts.momentum * net.layers{l}.momentum{j} ...
         - thisDecay * net.layers{l}.weights{j} ...
