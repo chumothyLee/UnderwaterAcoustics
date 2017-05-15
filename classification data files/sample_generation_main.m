@@ -82,6 +82,7 @@ for q=file_index
                 sub_data=audioread(files(q).name,[off+1-t_pad,endlimit]);
                 
                 fprintf("calling spectogram\n");
+                
                 time_new = time + datenum(0,0,0,0,0,(j-1)*((parm.nrec/parm.sample_freq) - 2*parm.pad));
                 [GPL_struct,subdata,sublabels,subtimeinfo]=spectogram(sub_data,parm,time_new);
                 
