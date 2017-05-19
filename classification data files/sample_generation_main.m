@@ -33,7 +33,7 @@ timeinfo = [];
 
 filenum = 0;
 
-% dialogue to prompt user to select a directory to put training data
+%% dialogue to prompt user to select a directory to put training data
 choice = questdlg('Select a directory to store training data', 'Select Directory', 'OK', 'Cancel','OK');
 
 if strcmp(choice, 'Cancel')
@@ -42,7 +42,7 @@ end
 
 % directory name to store training data
 dirToStore = uigetdir;
-
+%%
 
 for q=file_index
     %fprintf("for loop: %d\n", q)

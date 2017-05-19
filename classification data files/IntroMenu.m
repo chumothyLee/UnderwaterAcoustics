@@ -22,7 +22,7 @@ function varargout = IntroMenu(varargin)
 
 % Edit the above text to modify the response to help IntroMenu
 
-% Last Modified by GUIDE v2.5 14-May-2017 18:54:44
+% Last Modified by GUIDE v2.5 16-May-2017 22:10:20
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -73,30 +73,34 @@ function varargout = IntroMenu_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 
 
-% --- Executes on button press in pushbutton1.
-function pushbutton1_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton1 (see GCBO)
+% --- Executes on button press in process x.wav file.
+function processXWav_Callback(hObject, eventdata, handles)
+% hObject    handle to processXWav (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-run('MainMenu.m');
+% runs new_parm and automatically steps through training process
+% run('new_parm.m');
+% run('sample_generation_main.m');
+% runs sampleGenUI and steps through process via a User Interface
+ run('sampleGenUi.m');
 
-% --- Executes on button press in pushbutton2.
-function pushbutton2_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton2 (see GCBO)
+% --- Executes on button press in procDataSample.
+function procDataSample_Callback(hObject, eventdata, handles)
+% hObject    handle to procDataSample (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 
-% --- Executes on button press in pushbutton3.
-function pushbutton3_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton3 (see GCBO)
+% --- Executes on button press in processTrainData.
+function processTrainData_Callback(hObject, eventdata, handles)
+% hObject    handle to processTrainData (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 
-% --- Executes on button press in pushbutton4.
-function pushbutton4_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton4 (see GCBO)
+% --- Executes on button press in evalCNNPerformance.
+function evalCNNPerformance_Callback(hObject, eventdata, handles)
+% hObject    handle to evalCNNPerformance (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)

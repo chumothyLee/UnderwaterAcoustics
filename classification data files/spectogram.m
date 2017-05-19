@@ -21,14 +21,14 @@ norm_v=whiten_matrix(norm_v')';norm_h=whiten_matrix(norm_h);
 
 bas=abs(norm_v).^parm.xp1.*abs(norm_h).^parm.xp2;
 
-%sets figure parameters
-figure('Position', [300 300 900 700])
+%sets figure parameters for the window
+sampleGenUIFig = figure('Position', [300 300 700 650])
 
 GPL_struct=[];
 list = ['blank      ';'noise      ';'croak      ';'jet-ski    ';'click train';'pulse train';'buzz       ';'downsweep  ';'beat       '];  %call types
 listofcalls = cellstr(list);
 
-subplot(4,5,[1,5]);
+subplot(7,5,[1,5]);
 %% spectogram plot
 ns=[1:length(baseline0)]*parm.skip/parm.sample_freq;
 fr=linspace(parm.freq_lo,parm.freq_hi,parm.bin_hi-parm.bin_lo+1);
@@ -36,33 +36,34 @@ imagesc(ns,fr,20*log10(abs(sp)),[-40,0]);
 axis xy; title('Spectrogram'); 
 
 %% legend for training options
-subplot (4,5,6);
+subplot (7,5,[6,11]);
 imshow('./ImagesForLegend/blank.jpg');
 title('blank - option 1');
-subplot (4,5,7);
+subplot (7,5,[7,12]);
 imshow('./ImagesForLegend/noise.jpg');
 title('noise - option 2');
-subplot (4,5,8);
+subplot (7,5,[8,13]);
 imshow('./ImagesForLegend/croak.jpg');
 title('croak - option 3');
-subplot (4,5,9);
+subplot (7,5,[16,21]);
 imshow('./ImagesForLegend/jetski.jpg');
 title('jetski - option 4');
-subplot (4,5,10);
+subplot (7,5,[17,22]);
 imshow('./ImagesForLegend/clicktrain.jpg');
 title('clicktrain - option 5');
-subplot (4,5,11);
+subplot (7,5,[18,23]);
 imshow('./ImagesForLegend/pulsetrain.jpg');
 title('pulsetrain - option 6');
-subplot (4,5,12);
+subplot (7,5,[26,31]);
 imshow('./ImagesForLegend/buzz.jpg');
 title('buzz - option 7');
-subplot (4,5,13);
+subplot (7,5,[27,32]);
 imshow('./ImagesForLegend/downsweep.jpg');
 title('downsweep - option 8')
-subplot (4,5,14);
+subplot (7,5,[28,33]);
 imshow('./ImagesForLegend/beat.jpg');
 title('beat - option 9');
+
 
 subdata = [];
 sublabels = [];
@@ -80,7 +81,7 @@ if(strcmp(str0,'y') || strcmp(str0,'Y'))
     for im = 1:7
         A1 = A(:,(im-1)*204+1:(im-1)*204+204);
         imwrite(A1,'im1.jpg');
-        subplot(4,5,[16,20]);
+        subplot(7,5,[14,15,19,20,24,25]);
         imshow(A1(:,:,[1 1 1]));
         title ('label:');
         str = input(prompt1,'s');
