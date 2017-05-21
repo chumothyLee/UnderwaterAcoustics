@@ -294,7 +294,9 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
 
                     bas=abs(norm_v).^parm.xp1.*abs(norm_h).^parm.xp2;
 
-                    axes(handles.spectogram);
+                    axes(handles.spectogram)
+
+                    
                     ns=[1:length(baseline0)]*parm.skip/parm.sample_freq;
                     fr=linspace(parm.freq_lo,parm.freq_hi,parm.bin_hi-parm.bin_lo+1);
                     imagesc(ns,fr,20*log10(abs(sp)),[-40,0]);
@@ -313,17 +315,28 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
 %                     
 %                     uiresume
 
-                    A = flipud(mat2gray(abs(20*log10(abs(bas)))));
-
                     for im = 1:7
                         
-                        axes(handles.sample);
                         A1 = A(:,(im-1)*204+1:(im-1)*204+204);
                         imwrite(A1,'im1.jpg');
+                        subplot(7,5,[14,15,19,20,24,25]);
                         imshow(A1(:,:,[1 1 1]));
                         title ('label:');
 
-                        waitforbuttonpress;
+
+                        str = input(prompt1,'s');
+                        if (strcmp(str,'y') || strcmp(str,'Y'))
+                            prompt2 = 'label: ';                   %% give enumerates call type number here to label
+                            templabel = input(prompt2);
+
+                            A1 = imread('im1.jpg');
+                            subdata = [subdata;reshape(A1,1,204*204)];
+                            sublabels = [sublabels;listofcalls(templabel)];
+                            start_t = time + datenum(0,0,0,0,0,(im-1)*10);
+                            end_t = start_t + datenum(0,0,0,0,0,10);
+                            str_time = strcat(datestr(time),' start_time:',datestr(start_t),' end_time:',datestr(end_t));
+                            subtimeinfo = [subtimeinfo;str_time];
+                        end
                     end
 
                     filenum = filenum + 1;
