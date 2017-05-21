@@ -22,7 +22,7 @@ function varargout = sampleGenUi(varargin)
 
 % Edit the above text to modify the response to help sampleGenUi
 
-% Last Modified by GUIDE v2.5 17-May-2017 17:27:43
+% Last Modified by GUIDE v2.5 21-May-2017 12:37:17
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -158,6 +158,8 @@ function confirmLabel_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+uiresume;
+
 % Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
@@ -273,9 +275,10 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
 
                     fprintf("calling spectogram\n");
                     
-                    %% spectogram
 
                     time_new = time + datenum(0,0,0,0,0,(j-1)*((parm.nrec/parm.sample_freq) - 2*parm.pad));
+
+                    %% spectogram
 
                    [sp] = GPL_fft(sub_data,parm);
                     %fprintf("finished GPL_fft")
@@ -293,6 +296,10 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
                     norm_v=whiten_matrix(norm_v')';norm_h=whiten_matrix(norm_h);
 
                     bas=abs(norm_v).^parm.xp1.*abs(norm_h).^parm.xp2;
+                    
+                    GPL_struct=[];
+                    list = ['blank      ';'noise      ';'croak      ';'jet-ski    ';'click train';'pulse train';'buzz       ';'downsweep  ';'beat       '];  %call types
+                    listofcalls = cellstr(list);
 
                     axes(handles.spectogram);
                     ns=[1:length(baseline0)]*parm.skip/parm.sample_freq;
@@ -301,17 +308,24 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
                     title('Spectrogram'); 
                     axis xy
                     
-%                     %waitforbuttonpress;
-%                     uiwait;
-%                     
-%                      % dialogue to prompt whether to peek into slot
-%                     choice = questdlg('Would you like to peep into this slot?', 'Look into slot', 'OK', 'Cancel','OK');
-% 
-%                     if strcmp(choice, 'Cancel')
-%                        return
-%                     end
-%                     
-%                     uiresume
+                    subdata = [];
+                    sublabels = [];
+                    subtimeinfo = [];
+                    %xlabel(datestr(time_new));
+                    shading interp;
+                    
+%                      %waitforbuttonpress;
+%                      uiwait;
+%                      
+%                       % dialogue to prompt whether to peek into slot
+%                      choice = questdlg('Would you like to peep into this slot?', 'Look into slot', 'OK', 'Cancel','OK');
+%  
+%                      if strcmp(choice, 'Cancel')
+%                         return
+%                      else
+%                         uiresume                        
+%                      end
+%                      
 
                     A = flipud(mat2gray(abs(20*log10(abs(bas)))));
 
@@ -323,13 +337,84 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
                         imshow(A1(:,:,[1 1 1]));
                         title ('label:');
 
-                        waitforbuttonpress;
+                        %waitforbuttonpress;
+                        uiwait;
+
+                        subdata = [subdata;reshape(A1,1,204*204)];
+                        
+                        buttonSelected = get(handles.uibuttongroup2, 'SelectedObject');
+                        optionSelected = get(buttonSelected, 'Tag')
+                        
+
+                        switch optionSelected
+                            case 'blankButton'
+                                sublabels = [sublabels;listofcalls(1)];
+                            case 'noiseButton'
+                                sublabels = [sublabels;listofcalls(2)];
+                            case 'croakButton'
+                                sublabels = [sublabels;listofcalls(3)];
+                            case 'jetskiButton'
+                                sublabels = [sublabels;listofcalls(4)];
+                            case 'clicktrainButton'
+                                sublabels = [sublabels;listofcalls(5)];                               
+                            case 'pulsetrainButton'
+                                sublabels = [sublabels;listofcalls(6)]; 
+                            case 'buzzButton'
+                                sublabels = [sublabels;listofcalls(7)];
+                            case 'downsweepButton'
+                                sublabels = [sublabels;listofcalls(8)];
+                            case 'beatButton'
+                                sublabels = [sublabels;listofcalls(9)];
+                            case 'skipButton'
+                                continue;
+                        end
+                            
+                            %start_t = time_new + datenum(0,0,0,0,0,(im-1)*10);
+                            %end_t = start_t + datenum(0,0,0,0,0,10);
+                            %str_time = strcat(datestr(time_new),' start_time:',datestr(start_t),' end_time:',datestr(end_t));
+                            %subtimeinfo = [subtimeinfo;str_time];
+
                     end
+                    
+                    for i=1:length(sublabels)
 
-                    filenum = filenum + 1;
+                        %fprintf("sublabels(%d) = %s",i, string(sublabels(i)))
 
+                        switch string(sublabels(i))
+                            case "blank"
+                                currLabel = 1
+                            case "noise"
+                                currLabel = 2
+                            case "croak"
+                                currLabel = 3
+                            case "jet-ski"
+                                currLabel = 4
+                            case "click train"
+                                currLabel = 5
+                            case "pulse train"
+                                currLabel = 6
+                            case "buzz"
+                                currLabel = 7
+                            case "downsweep"
+                                currLabel = 8
+                            case "beat"
+                                currLabel = 9
+                            otherwise
+                                fprintf("error: unexpected label")
+                                continue
+
+                        end
+
+                        filename = fullfile(dirToStore, char("image_data" + currLabel + "_" + filenum + ".mat"));
+                        currData = subdata(i,1:end);
+                        currLabel = sublabels(i);
+                        %currTimeInfo = subtimeinfo;
+                        %save(filename,'currData','currLabel','currTimeInfo');
+                        save(filename,'currData','currLabel');
+
+                        filenum = filenum + 1;
+                    end
                    
-
                 end
 
             end
