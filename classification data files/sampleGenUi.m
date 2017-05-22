@@ -43,7 +43,6 @@ else
 end
 % End initialization code - DO NOT EDIT
 
-
 % --- Executes just before sampleGenUi is made visible.
 function sampleGenUi_OpeningFcn(hObject, eventdata, handles, varargin)
     % This function has no output args, see OutputFcn.
@@ -189,6 +188,10 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
     
     processStarted = true;
     
+    global time_new;
+    global time;
+
+    
     %% setup workspace object parm
     run('new_parm.m');
     
@@ -275,8 +278,9 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
 
                     fprintf("calling spectogram\n");
                     
-
+%% time error
                     time_new = time + datenum(0,0,0,0,0,(j-1)*((parm.nrec/parm.sample_freq) - 2*parm.pad));
+                    %[GPL_struct,subdata,sublabels,subtimeinfo]=spectogram(sub_data,parm,time_new);
 
                     %% spectogram
 
@@ -308,25 +312,24 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
                     title('Spectrogram'); 
                     axis xy
                     
+             
+                    % dialogue to prompt whether to peek into slot
+                    choice = questdlg('Would you like to peep into this slot?', 'Look into slot', 'OK', 'Cancel','OK');  
+                    
+                    % go on to next iteration
+                    if strcmp(choice, 'Cancel')
+                          continue
+                    
+                    else
+                          uiresume                        
+                    end
+                    
                     subdata = [];
                     sublabels = [];
                     subtimeinfo = [];
-                    %xlabel(datestr(time_new));
+                    xlabel(datestr(time_new));
                     shading interp;
-                    
-%                      %waitforbuttonpress;
-%                      uiwait;
-%                      
-%                       % dialogue to prompt whether to peek into slot
-%                      choice = questdlg('Would you like to peep into this slot?', 'Look into slot', 'OK', 'Cancel','OK');
-%  
-%                      if strcmp(choice, 'Cancel')
-%                         return
-%                      else
-%                         uiresume                        
-%                      end
-%                      
-
+                      
                     A = flipud(mat2gray(abs(20*log10(abs(bas)))));
 
                     for im = 1:7
@@ -369,6 +372,7 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
                                 continue;
                         end
                             
+                        %% time error
                             %start_t = time_new + datenum(0,0,0,0,0,(im-1)*10);
                             %end_t = start_t + datenum(0,0,0,0,0,10);
                             %str_time = strcat(datestr(time_new),' start_time:',datestr(start_t),' end_time:',datestr(end_t));
@@ -408,6 +412,7 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
                         filename = fullfile(dirToStore, char("image_data" + currLabel + "_" + filenum + ".mat"));
                         currData = subdata(i,1:end);
                         currLabel = sublabels(i);
+                        %% time error
                         %currTimeInfo = subtimeinfo;
                         %save(filename,'currData','currLabel','currTimeInfo');
                         save(filename,'currData','currLabel');
@@ -433,6 +438,10 @@ function finishLabelProc_Callback(hObject, eventdata, handles)
     % eventdata  reserved - to be defined in a future version of MATLAB
     % handles    structure with handles and user data (see GUIDATA)
     global processStarted;
+    
+    processStarted = false;
+
+    close(sampleGenUi);    
 
 
 % --- Executes on button press in blankButton.
