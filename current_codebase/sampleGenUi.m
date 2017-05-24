@@ -188,8 +188,8 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
     
     processStarted = true;
     
-    global time_new;
-    global time;
+    %global time_new;
+    %global time;
 
     
     %% setup workspace object parm
@@ -279,7 +279,7 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
                     fprintf("calling spectogram\n");
                     
 %% time error
-                    time_new = time + datenum(0,0,0,0,0,(j-1)*((parm.nrec/parm.sample_freq) - 2*parm.pad));
+                    %time_new = time + datenum(0,0,0,0,0,(j-1)*((parm.nrec/parm.sample_freq) - 2*parm.pad));
                     %[GPL_struct,subdata,sublabels,subtimeinfo]=spectogram(sub_data,parm,time_new);
 
                     %% spectogram
@@ -313,21 +313,21 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
                     axis xy
                     
              
-                    % dialogue to prompt whether to peek into slot
-                    choice = questdlg('Would you like to peep into this slot?', 'Look into slot', 'OK', 'Cancel','OK');  
-                    
-                    % go on to next iteration
-                    if strcmp(choice, 'Cancel')
-                          continue
-                    
-                    else
-                          uiresume                        
-                    end
+%                     % dialogue to prompt whether to peek into slot
+%                     choice = questdlg('Would you like to peep into this slot?', 'Look into slot', 'OK', 'Cancel','OK');  
+%                     
+%                     % go on to next iteration
+%                     if strcmp(choice, 'Cancel')
+%                           continue
+%                     
+%                     else
+%                           uiresume                        
+%                     end
                     
                     subdata = [];
                     sublabels = [];
                     subtimeinfo = [];
-                    xlabel(datestr(time_new));
+                    %xlabel(datestr(time_new));
                     shading interp;
                       
                     A = flipud(mat2gray(abs(20*log10(abs(bas)))));
