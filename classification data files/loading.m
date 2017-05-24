@@ -2,14 +2,31 @@
 imagesdata = [];
 label = [];
 
+mat_directory = 'test_data'; %TODO: guify this
+files = dir(mat_directory);
+fileIndex = find(~[files.isdir]);
+%fprintf("%d", length(fileIndex));
+
 %% collecting image data from different files
-for i = 1:22
-    str1 = strcat('image_data',int2str(i) ,'.mat');
-    load(str1);
-    imagesdata = [imagesdata;data];
-    label = [label;labels];
-    clear data
-    clear labels
+
+for i = 1:length(fileIndex)
+    %str1 = strcat('image_data',int2str(i) ,'.mat');
+    
+    currFile = files(fileIndex(i)).name;
+    %fprintf("%s\n", currFile);
+    %continue if not a .mat file
+    if currFile(end-3:end) ~= '.mat'
+        continue
+    end
+    file = load(currFile);
+    
+    %data = file.currData;
+    %label = file.currLabel;
+    
+    imagesdata = [imagesdata;file.currData];
+    label = [label;file.currLabel];
+    %clear data
+    %clear label
 end
 clear labels
 %% shuffling----------
