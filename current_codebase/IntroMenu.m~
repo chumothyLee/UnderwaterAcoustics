@@ -90,6 +90,7 @@ function procDataSample_Callback(hObject, eventdata, handles)
 % hObject    handle to procDataSample (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+run('
 
 
 % --- Executes on button press in processTrainData.
@@ -97,7 +98,7 @@ function processTrainData_Callback(hObject, eventdata, handles)
 % hObject    handle to processTrainData (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-run('loading.m');
+
 
 % --- Executes on button press in evalCNNPerformance.
 function evalCNNPerformance_Callback(hObject, eventdata, handles)
