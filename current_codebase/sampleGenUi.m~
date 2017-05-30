@@ -407,9 +407,9 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
                         currData = subdata(i,1:end);
                         currLabel = sublabels(i);
                         %% time error
-                        currTimeInfo = subtimeinfo;
-                        save(filename,'currData','currLabel','currTimeInfo');
-                        %save(filename,'currData','currLabel');
+                        %currTimeInfo = subtimeinfo;
+                        %save(filename,'currData','currLabel','currTimeInfo');
+                        save(filename,'currData','currLabel');
 
                         filenum = filenum + 1;
                     end
