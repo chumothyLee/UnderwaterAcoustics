@@ -314,10 +314,10 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
                     
              
                      % dialogue to prompt whether to peek into slot
-                     choice = questdlg('Would you like to peep into this slot?', 'Look into slot', 'OK', 'Cancel','OK');  
+                     choice = questdlg('Would you like to peep into this slot?', 'Look into slot', 'OK', 'Skip','OK');  
                      
                      % go on to next iteration
-                     if strcmp(choice, 'Cancel')
+                     if strcmp(choice, 'Skip')
                            continue
                      
                      else
