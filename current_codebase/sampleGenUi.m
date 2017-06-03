@@ -22,7 +22,7 @@ function varargout = sampleGenUi(varargin)
 
 % Edit the above text to modify the response to help sampleGenUi
 
-% Last Modified by GUIDE v2.5 21-May-2017 12:37:17
+% Last Modified by GUIDE v2.5 02-Jun-2017 19:19:59
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -55,6 +55,7 @@ function sampleGenUi_OpeningFcn(hObject, eventdata, handles, varargin)
     global processStarted;
     fileIndex = 0;
     processStarted = false;
+    
 
     %% initialize axes plots with image legends
     axes(handles.blank)
@@ -174,6 +175,9 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
     % eventdata  reserved - to be defined in a future version of MATLAB
     % handles    structure with handles and user data (see GUIDATA)
     
+    %% change iteration
+    global j;
+    
     %% check global flag
     global processStarted;
     
@@ -233,13 +237,16 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
     %%
 
     for q=file_index
+        %if EXIT == 1 
+        %    return
+        %end
         %fprintf("for loop: %d\n", q)
         if(length(files(q).name) > 4 )
             %fprintf("length of files(q).name is > 4\n")
             if( strcmp(files(q).name(end-5:end),'.x.wav'))
                 %fprintf("valid file\n")
                 %siz=audioread(files(q).name);
-                info = audioinfo(files(q).name);
+                info = audioinfo(files(q).name)
                 siz = [info.TotalSamples, info.NumChannels];
 
                 %fprintf("finished with audioread\n")
@@ -252,9 +259,26 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
                 %fprintf("finished with getxwavheaders\n")
                 time = julian_start_date + datenum(2000,0,0,0,0,0);
                 %fprintf("t_actual: %d\n", t_actual)
-                for(j=1:siz/t_actual/scale_factor)
+                
+                
+                %% skip to an iteration
+                prompt = {'Begin labeling at iteration :'};
+                dlg_title = 'Select Iteration';
+                num_lines = 1;
+                defaultans = {'1'};
+                startIterationStr = inputdlg(prompt,dlg_title,num_lines,defaultans);
+                startIteration = str2num(startIterationStr{:})
 
-                    %fprintf("j: %d, num_iterations: %d\n", j, siz/t_actual);
+                
+                for(j=startIteration:siz/t_actual/scale_factor)
+%                     siz
+%                     t_actual
+%                     scale_factor
+%                     k=1:siz/t_actual/scale_factor
+                    
+                    set(handles.iterationLabel, 'String', ['You are on iteration: ', num2str(j)]);
+
+                    fprintf("j: %d, num_iterations left: %d\n", j, siz/t_actual - 1);
 
                     fprintf("j: %d\n", j);
                     off=(j-1)*t_actual+t_pad;
@@ -271,7 +295,6 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
 
                     fprintf("calling spectogram\n");
                     
-%% time error
                     time_new = time + datenum(0,0,0,0,0,(j-1)*((parm.nrec/parm.sample_freq) - 2*parm.pad));
                     %[GPL_struct,subdata,sublabels,subtimeinfo]=spectogram(sub_data,parm,time_new);
 
@@ -433,11 +456,12 @@ function finishLabelProc_Callback(hObject, eventdata, handles)
     % handles    structure with handles and user data (see GUIDATA)
     global processStarted;
     
-    processStarted = false;
-
+    processStarted = false;  
+   
     close(sampleGenUi);    
-
-
+    
+     
+    
 % --- Executes on button press in blankButton.
 function blankButton_Callback(hObject, eventdata, handles)
 % hObject    handle to blankButton (see GCBO)
@@ -500,3 +524,47 @@ function beatButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % Hint: get(hObject,'Value') returns toggle state of beatButton
+
+
+% --- Executes when user attempts to close figure1.
+function figure1_CloseRequestFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: delete(hObject) closes the figure
+%global EXIT;
+%EXIT = 1;
+delete(hObject);
+%exit;
+
+
+
+function changeIteration_Callback(hObject, eventdata, handles)
+% hObject    handle to changeIteration (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of changeIteration as text
+%        str2double(get(hObject,'String')) returns contents of changeIteration as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function changeIteration_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to changeIteration (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+%%TODO FIX!!!
+% --- Executes on button press in changeIterationButton.
+function changeIterationButton_Callback(hObject, eventdata, handles)
+% hObject    handle to changeIterationButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global j;
