@@ -24,20 +24,15 @@ for i=1:length(start_times)
     
     start_time = start_times(i);
     end_time = end_times(i);
-
-    %{
-    if (end_time - start_time > 130 || end_time - start_time < 15 or start_time < 10)
-        fprintf("interval time of %d is too long\n", (end_time - start_time)); 
-        continue
-    end
-    %}
-
     
     mid_point = floor(((end_time + start_time))/2);
 
     sub_data_start_time = mid_point - 5;
-    %sub_data_end_time = mid_point + 5;
 
+    if sub_data_start_time < 1
+        %continue if the edge of the picture would be non-positive
+        continue
+    end
     data = audioread(filename, ...
         [sub_data_start_time*sampleRate, sub_data_start_time*sampleRate + data_width]);
 
@@ -58,7 +53,6 @@ for i=1:length(start_times)
     
     A = flipud(mat2gray(abs(20*log10(abs(bas)))));
     
-    %A1 = A(:, mid_point_pixel - 102:mid_point_pixel + 101);
     A1 = A(:,1:204);
     
     imwrite(A1,'im1.jpg');
