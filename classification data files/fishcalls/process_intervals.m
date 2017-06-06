@@ -11,7 +11,7 @@ filename = '../test/GofMX_MP01_100731_000345.df100.x.wav';
 
 sampleRate = parm.sample_freq;
 
-file_data = [];
+data = [];
 time = [];
 data_width = parm.nrec;
 
@@ -33,11 +33,11 @@ for i=1:length(start_times)
         %continue if the edge of the picture would be non-positive
         continue
     end
-    data = audioread(filename, ...
+    sub_data = audioread(filename, ...
         [sub_data_start_time*sampleRate, sub_data_start_time*sampleRate + data_width]);
 
 
-    [sp] = GPL_fft(data,parm);
+    [sp] = GPL_fft(sub_data,parm);
     sp_whiten = GPL_whiten(sp,parm);
     sp_loop=sp_whiten;
 
@@ -58,14 +58,14 @@ for i=1:length(start_times)
     imwrite(A1,'im1.jpg');
     A1 = imread('im1.jpg');
 
-    data = reshape(A1, 1, 204*204);
+    sub_data = reshape(A1, 1, 204*204);
 
-    file_data = [file_data; data];
+    data = [data; sub_data];
     time = [time; mid_point];
     
 end
 
 image_data_name = "image_data.mat";
-save(image_data_name, 'file_data', 'time');
+save(image_data_name, 'data', 'time');
 
 
