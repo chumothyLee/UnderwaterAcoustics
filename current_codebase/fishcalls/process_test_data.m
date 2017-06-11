@@ -1,13 +1,13 @@
-%TODO: specify this with the GUI
+
 
 %% dialogue to prompt user to select a directory to put training data
-choice1 = questdlg('Select an imdb to process', 'Select file', 'OK', 'Cancel','OK');
+%choice1 = questdlg('Select an imdb to process', 'Select file', 'OK', 'Cancel','OK');
+%
+%if strcmp(choice1, 'Cancel')
+%    return
+%end
 
-if strcmp(choice1, 'Cancel')
-    return
-end
-
-imdbPath = uigetfile;
+%imdbPath = uigetfile;
 
 choice2 = questdlg('Select an directory containing test data', 'Select file', 'OK', 'Cancel','OK');
 
@@ -31,7 +31,8 @@ outputFile = fullfile(uigetdir, 'test.csv');
   'expDir', 'data/fishcalls-bnorm', 'batchNormalization', true);
 
 %extract the dataMean from the imdb.mat file
-imdb = load(imdbPath + '/imdb.mat');
+imdbPath = 'data/fishcalls-bnorm/imdb.mat';
+imdb = load(imdbPath);
 dataMean = imdb.dataMean;
 
 %get the directory and the indices of the files
@@ -55,7 +56,7 @@ for i=1:length(fileIndex)
     end
 
     %load the file, and extract the data and time label
-    currFile = load(currFile);
+    currFile = load(fullfile(testDirectory,currFile));
     s = size(currFile.data);
     numTestPoints = s(1);
     

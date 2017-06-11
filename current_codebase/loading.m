@@ -33,8 +33,8 @@ for i = 1:length(fileIndex)
     %data = file.currData;
     %label = file.currLabel;
     
-    imagesdata = [imagesdata;file.currData];
-    label = [label;file.currLabel];
+    imagesdata = [imagesdata;file.data];
+    label = [label;file.label];
     %clear data
     %clear label
 end
@@ -98,13 +98,14 @@ for i = 1:s1
 end
 
 %% dialogue to prompt user to select a directory to put training data
-choice = questdlg('Select a directory to store imdb file', 'Select Directory', 'OK', 'Cancel','OK');
+%choice = questdlg('Select a directory to store imdb file', 'Select Directory', 'OK', 'Cancel','OK');
 
-if strcmp(choice, 'Cancel')
-   return
-end
+%if strcmp(choice, 'Cancel')
+%   return
+%end
 
 % directory name to store training data
-dirToStore = uigetdir;
+%dirToStore = uigetdir;
+dirToStore = 'fishcalls/data/fishcalls-bnorm';
 filename = fullfile(dirToStore, 'imdb.mat');
 save(filename);

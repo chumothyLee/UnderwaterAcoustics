@@ -1,25 +1,36 @@
 
-%% dialogue to prompt user to select a directory to put training data
+%% dialogue to prompt user to select file containing the intervals
 choice = questdlg('Select a file containing intervals to label', 'Select file', 'OK', 'Cancel','OK');
 
 if strcmp(choice, 'Cancel')
     return
 end
 
-%% directory name to store training data
+%% file containing the intervals
 txt_file = uigetfile;
 
 %%read in the file
 intervals = load(txt_file);
 %intervals = load("../test/test_intervals.txt");
+
 start_times = intervals(:,round(1));
 end_times = intervals(:,round(2));
 %start_times = [10, 38000];
 %end_times = [90, 38130];
-[pathstr,name,ext] = fileparts(txt_file)
-filename = fullfile(pathstr, name, '.x.wav');
-%%%%%%%%%%%
 
+%% dialogue to prompt user to select file containing the wav data
+choice = questdlg('Select the wav file', 'Select file', 'OK', 'Cancel','OK');
+
+if strcmp(choice, 'Cancel')
+    return
+end
+
+filename = uigetfile;
+
+%[pathstr,name,ext] = fileparts(txt_file)
+%filename = fullfile(pathstr, name, '.x.wav');
+%%%%%%%%%%%
+run('new_parm.m');
 sampleRate = parm.sample_freq;
 
 data = [];
@@ -86,5 +97,5 @@ end
 % directory name to store training data
 dirToStore = uigetdir;
 
-image_data_name = "image_data.mat";
-save(fullfile(dirToStore, image_data_name, 'data', 'time'));
+image_data_name = 'image_data.mat';
+save(fullfile(dirToStore, image_data_name), 'data', 'time');

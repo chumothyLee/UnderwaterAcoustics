@@ -427,11 +427,11 @@ function beginLabelProc_Callback(hObject, eventdata, handles)
                         end
 
                         filename = fullfile(dirToStore, char("image_data" + currLabel + "_" + filenum + ".mat"));
-                        currData = subdata(i,1:end);
-                        currLabel = sublabels(i);
+                        data = subdata(i,1:end);
+                        label = sublabels(i);
                         %% time error
                         currTimeInfo = subtimeinfo;
-                        save(filename,'currData','currLabel','currTimeInfo');
+                        save(filename,'data','label','currTimeInfo');
                         %save(filename,'currData','currLabel');
 
                         filenum = filenum + 1;
