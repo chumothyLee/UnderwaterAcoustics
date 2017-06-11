@@ -22,7 +22,7 @@ function varargout = IntroMenu(varargin)
 
 % Edit the above text to modify the response to help IntroMenu
 
-% Last Modified by GUIDE v2.5 16-May-2017 22:10:20
+% Last Modified by GUIDE v2.5 11-Jun-2017 00:07:53
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -85,13 +85,6 @@ function processXWav_Callback(hObject, eventdata, handles)
 % runs sampleGenUI and steps through process via a User Interface
  run('sampleGenUi.m');
 
-% --- Executes on button press in procDataSample.
-function procDataSample_Callback(hObject, eventdata, handles)
-% hObject    handle to procDataSample (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
 % --- Executes on button press in processTrainData.
 function processTrainData_Callback(hObject, eventdata, handles)
 % hObject    handle to processTrainData (see GCBO)
@@ -99,8 +92,17 @@ function processTrainData_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 run('loading.m');
 
-% --- Executes on button press in evalCNNPerformance.
-function evalCNNPerformance_Callback(hObject, eventdata, handles)
-% hObject    handle to evalCNNPerformance (see GCBO)
+
+% --- Executes on button press in procIntervals.
+function procIntervals_Callback(hObject, eventdata, handles)
+% hObject    handle to procIntervals (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+run('./fishcalls/process_intervals.m');
+
+% --- Executes on button press in procData.
+function procData_Callback(hObject, eventdata, handles)
+% hObject    handle to procData (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+run('./fishcalls/process_test_data.m');
