@@ -7,10 +7,11 @@ if strcmp(choice, 'Cancel')
 end
 
 %% file containing the intervals
-txt_file = uigetfile;
+[txt_file, path_name] = uigetfile('*.txt');
+full_txt_filename = fullfile(path_name, txt_file);
 
 %%read in the file
-intervals = load(txt_file);
+intervals = load(full_txt_filename);
 %intervals = load("../test/test_intervals.txt");
 
 start_times = intervals(:,round(1));
@@ -25,12 +26,12 @@ if strcmp(choice, 'Cancel')
     return
 end
 
-filename = uigetfile;
+filename = uigetfile('*.x.wav');
 
 %[pathstr,name,ext] = fileparts(txt_file)
 %filename = fullfile(pathstr, name, '.x.wav');
 %%%%%%%%%%%
-run('new_parm.m');
+run('../new_parm.m');
 sampleRate = parm.sample_freq;
 
 data = [];
@@ -39,10 +40,12 @@ data_width = parm.nrec;
 
 file_length = length(start_times);
 
+progressBar = waitbar(0, 'Processing intervals...');
+
 for i=1:length(start_times)
     
-    fprintf("Progress: %d%%\n", round((i/file_length)*100))
-    
+    %fprintf("Progress: %d%%\n", round((i/file_length)*100))
+    waitbar(i/file_length, progressBar, sprintf('Processing Intervals-Progress: %d%%\n', round((i/file_length)*100)));
     
     start_time = start_times(i);
     end_time = end_times(i);
